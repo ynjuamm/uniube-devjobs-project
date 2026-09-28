@@ -1,176 +1,126 @@
 const vagas = [
     {
-        id: 1,
-        titulo: 'Desenvolvedor(a) Frontend React',
-        empresa: 'TechNova Ltda',
-        tipo: 'remoto',
-        tecnologias: ['React', 'TypeScript', 'CSS'],
-        salario: 'R$ 6.000 – R$ 9.000',
-        local: 'Remoto'
+        titulo: "Estágio em Desenvolvimento Web",
+        empresa: "TechStart",
+        tipo: "Remoto",
+        tecnologias: "HTML, CSS e JavaScript"
     },
     {
-        id: 2,
-        titulo: 'Backend Node.js',
-        empresa: 'DataFlow',
-        tipo: 'hibrido',
-        tecnologias: ['Node.js', 'PostgreSQL'],
-        salario: 'R$ 7.000 – R$ 10.000',
-        local: 'São Paulo, SP'
+        titulo: "Desenvolvedor Front-end Júnior",
+        empresa: "WebCode",
+        tipo: "Híbrido",
+        tecnologias: "JavaScript e React"
+    },
+    {
+        titulo: "Estágio em Python",
+        empresa: "Data Minas",
+        tipo: "Presencial",
+        tecnologias: "Python e MySQL"
+    },
+    {
+        titulo: "Suporte de TI",
+        empresa: "InfoHelp",
+        tipo: "Presencial",
+        tecnologias: "Redes e Windows"
+    },
+    {
+        titulo: "Desenvolvedor Back-end Júnior",
+        empresa: "CodeLab",
+        tipo: "Remoto",
+        tecnologias: "Node.js e MySQL"
+    },
+    {
+        titulo: "Estágio em Banco de Dados",
+        empresa: "DevSolutions",
+        tipo: "Híbrido",
+        tecnologias: "SQL e MySQL"
     }
 ];
 
-function criarCard(vaga) {
-    const article = document.createElement('article');
-    article.className = 'job-card';
-    article.dataset.id = vaga.id;
+const jobsGrid = document.getElementById("jobs-grid");
+const inputBusca = document.getElementById("busca");
+const resultadoContagem = document.getElementById("resultado-contagem");
+const botaoTema = document.getElementById("theme-toggle");
 
-    const badgeClass = {
-        remoto: 'job-card__badge--remote',
-        presencial: 'job-card__badge--onsite',
-        hibrido: 'job-card__badge--hybrid'
-    }[vaga.tipo] || '';
-
-    const tipoLabel = {
-        remoto: 'Remoto',
-        presencial: 'Presencial',
-        hibrido: 'Híbrido'
-    }[vaga.tipo] || vaga.tipo;
-
-    const header = document.createElement('div');
-    header.className = 'job-card__header';
-
-    const badge = document.createElement('span');
-    badge.className = `job-card__badge ${badgeClass}`;
-    badge.textContent = tipoLabel;
-
-    const title = document.createElement('h3');
-    title.className = 'job-card__title';
-    title.textContent = vaga.titulo;
-
-    const company = document.createElement('p');
-    company.className = 'job-card__company';
-    company.textContent = vaga.empresa;
-
-    header.append(badge, title, company);
-
-    const body = document.createElement('div');
-    body.className = 'job-card__body';
-
-    const tech = document.createElement('p');
-    tech.className = 'job-card__tech';
-    tech.textContent = vaga.tecnologias.join(' · ');
-
-    const salary = document.createElement('p');
-    salary.className = 'job-card__salary';
-    salary.textContent = vaga.salario;
-
-    const location = document.createElement('p');
-    location.className = 'job-card__location';
-    location.textContent = `📍 ${vaga.local}`;
-
-    body.append(tech, salary, location);
-
-    const footer = document.createElement('div');
-    footer.className = 'job-card__footer';
-
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'btn btn--primary';
-    btn.textContent = 'Ver detalhes';
-
-    footer.appendChild(btn);
-    article.append(header, body, footer);
-
-    return article;
-}
-
-function renderizarVagas(lista) {
-    const grid = document.getElementById('jobs-grid');
-    grid.replaceChildren();
+function   mostrarVagas(lista) {
+    jobsGrid.innerHTML = "";
 
     if (lista.length === 0) {
-        const emptyMsg = document.createElement('p');
-        emptyMsg.className = 'empty-msg';
-        emptyMsg.textContent = 'Nenhuma vaga encontrada.';
-        grid.appendChild(emptyMsg);
+        jobsGrid.innerHTML = "<p>Nenhuma vaga encontrada.</p>";
+        resultadoContagem.textContent = "0 vagas encontradas";
         return;
     }
 
-    const fragment = document.createDocumentFragment();
-    lista.forEach(vaga => fragment.appendChild(criarCard(vaga)));
-    grid.appendChild(fragment);
-}
+    lista.forEach(function(vaga) {
+        const card = document.createElement("article");
+        card.className = "job-card";
 
-// Chamada para renderizar na tela
-renderizarVagas(vagas);
+        const badge = document.createElement("span");
+        badge.className = "badge";
+        badge.textContent = vaga.tipo;
 
-const inputBusca = document.getElementById('busca');
+        const titulo = document.createElement("h3");
+        titulo.textContent = vaga.titulo;
 
-function filtrarVagas(termo) {
-    const busca = termo.trim().toLowerCase();
+        const empresa = document.createElement("p");
+        empresa.className = "company";
+        empresa.textContent = vaga.empresa;
 
-    if (!busca) {
-        return vagas;
-    }
+        const tecnologias = document.createElement("p");
+        tecnologias.className = "tech";
+        tecnologias.textContent = vaga.tecnologias;
 
-    return vagas.filter(vaga => {
-        const texto = [
-            vaga.titulo,
-            vaga.empresa,
-            vaga.local,
-            ...vaga.tecnologias
-        ].join(' ').toLowerCase();
+        const botao = document.createElement("button");
+        botao.className = "btn";
+        botao.textContent = "Ver vaga";
 
-        return texto.includes(busca);
+        botao.addEventListener("click", function() {
+            alert("Vaga selecionada: " + vaga.titulo);
+        });
+
+        card.appendChild(badge);
+        card.appendChild(titulo);
+        card.appendChild(empresa);
+        card.appendChild(tecnologias);
+        card.appendChild(botao);
+
+        jobsGrid.appendChild(card);
     });
+
+    resultadoContagem.textContent = lista.length + " vaga(s) encontrada(s)";
 }
 
+function filtrarVagas() {
+    const texto = inputBusca.value.toLowerCase();
 
-function atualizarContagem(qtd, termo) {
-  const el = document.getElementById('resultado-contagem');
-  if (!termo.trim()) {
-    el.textContent = `${qtd} vagas disponíveis`;
-  } else {
-    el.textContent = `${qtd} vaga(s) encontrada(s) para "${termo}"`;
-  }
+    const vagasFiltradas = vagas.filter(function(vaga) {
+        return vaga.titulo.toLowerCase().includes(texto) ||
+               vaga.empresa.toLowerCase().includes(texto) ||
+               vaga.tipo.toLowerCase().includes(texto) ||
+               vaga.tecnologias.toLowerCase().includes(texto);
+    });
+
+    mostrarVagas(vagasFiltradas);
 }
 
-inputBusca.addEventListener('input', (evento) => {
-    const termo = evento.target.value;
-    const resultado = filtrarVagas(termo);
-    renderizarVagas(resultado);
-    atualizarContagem(resultado.length, termo);
-});
+function trocarTema() {
+    document.body.classList.toggle("dark");
 
-atualizarContagem(vagas.length, '');
-
-const THEME_KEY = 'devjobs-theme';
-const btnTheme = document.getElementById('theme-toggle');
-
-function aplicarTema(tema) {
-  document.body.classList.toggle('dark', tema === 'dark');
-  btnTheme.textContent = tema === 'dark' ? '☀️' : '🌙';
-  btnTheme.setAttribute('aria-label',
-    tema === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'
-  );
+    if (document.body.classList.contains("dark")) {
+        botaoTema.textContent = "☀️";
+        localStorage.setItem("tema", "dark");
+    } else {
+        botaoTema.textContent = "🌙";
+        localStorage.setItem("tema", "claro");
+    }
 }
 
-function carregarTemaSalvo() {
-  const salvo = localStorage.getItem(THEME_KEY);
-  if (salvo) {
-    aplicarTema(salvo);
-    return;
-  }
-  const prefereDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  aplicarTema(prefereDark ? 'dark' : 'light');
+inputBusca.addEventListener("input", filtrarVagas);
+botaoTema.addEventListener("click", trocarTema);
+
+if (localStorage.getItem("tema") === "dark") {
+    document.body.classList.add("dark");
+    botaoTema.textContent = "☀️";
 }
 
-function alternarTema() {
-  const isDark = document.body.classList.contains('dark');
-  const novoTema = isDark ? 'light' : 'dark';
-  aplicarTema(novoTema);
-  localStorage.setItem(THEME_KEY, novoTema);
-}
-
-btnTheme.addEventListener('click', alternarTema);
-carregarTemaSalvo();
+mostrarVagas(vagas);
